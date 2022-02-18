@@ -4,7 +4,7 @@ import { Form, Button } from 'react-bootstrap';
 class ContactForm extends React.Component {
     render(){
         return (
-            <form>
+            <Form>
                 <Form.Group controlId='contactFirstName'>
                     <Form.Label>First Name:</Form.Label>
                     <Form.Control type='text' placeholder='First Name' name="firstName"/>
@@ -17,8 +17,18 @@ class ContactForm extends React.Component {
                     <Form.Label>Company:</Form.Label>
                     <Form.Control type='text' placeholder='Company' name="company"/>
                 </Form.Group>
-                
-            </form>
+                <Form.Group controlId='contactPhone'>
+                    <Form.Label>Phone Number:</Form.Label>
+                    <Form.Control type='phone' placeholder='Phone Number' name="phone"/>
+                </Form.Group>
+                <Form.Group controlId='contactEmail'>
+                    <Form.Label>Email:</Form.Label>
+                    <Form.Control type='email' placeholder='Email' name="email"/>
+                </Form.Group>
+                <Button variant='primary' type='submit'>
+                    Submit
+                </Button>
+            </Form>
         )
     }
 }
