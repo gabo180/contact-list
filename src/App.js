@@ -14,6 +14,7 @@ class App extends React.Component {
     super();
     this.state = {
       loading: false,
+      showEditModal: false,
       contactData: [
         {
           'contactId': 1,
@@ -30,6 +31,14 @@ class App extends React.Component {
         company: '',
         phone: '',
         email: ''
+      },
+      editContactData: {
+        'contactId': 42,
+        'firstName': 'Zaphod',
+        'lastName': 'Beeblebrox',
+        'company': 'Heart of Gold',
+        'phone': '000-0000',
+        'email': 'prez@badnews.us'
       }
     }
   }
@@ -74,55 +83,74 @@ class App extends React.Component {
       });
 }
 
-loadContactData() {
-  this.setState({ loading: true })
-  console.log('Loading contact data')
-  fetch(SERVICE_URL + '/contacts')
-    .then(data => data.json())
-    .then(data => this.setState(
-      { contactData: data, loading: false }
-    ))
-}
+  handleEditModalClose = (event) => {
+    console.log('Closing Edit Modal')
+    this.setState({ showEditModal: false })
+  }
 
-componentDidMount() {
-  console.log('App is now mounted.')
-  // this.setState({ loading: true })
-  // console.log('Loading contact data')
-  // fetch(SERVICE_URL + '/contacts')
-  //   .then(data => data.json())
-  //   .then(data => this.setState(
-  //     { contactData: data, loading: false },
-  //   ))
-  this.loadContactData();
-}
+  handleEditModalOpen = (event) => {
+    console.log('Opening Edit Modal')
+    if (event) event.preventDefault();
+    let contactId = event.target.value;
+    console.log(`Editing contact id ${contactId}`)
+    this.setState({ showEditModal: true})
+  }
 
-render() {
-  return (
-    <Container fluid>
-      <Row>
-        <Col>
-          <h1 className='text-center'>Contact Application</h1>
-        </Col>
-      </Row>
-      <hr />
-      <Row>
-        <Col sm={8}>
-          <h2>My Contacts</h2>
-          <ContactTable contacts={this.state.contactData} />
-        </Col>
-        <Col sm={4}>
-          <h2>Add New Contact</h2>
-          <ContactForm
-            contactData={this.state.newContactData}
-            handleChange={this.handleAddFormChange}
-            handleSubmit={this.handleAddFormSubmit}
-          />
-        </Col>
-      </Row>
-      {/* <ContactModal />*/}
-    </Container>
-  );
-}
+  loadContactData() {
+    this.setState({ loading: true })
+    console.log('Loading contact data')
+    fetch(SERVICE_URL + '/contacts')
+      .then(data => data.json())
+      .then(data => this.setState(
+        { contactData: data, loading: false }
+      ))
+  }
+
+  componentDidMount() {
+    console.log('App is now mounted.')
+    // this.setState({ loading: true })
+    // console.log('Loading contact data')
+    // fetch(SERVICE_URL + '/contacts')
+    //   .then(data => data.json())
+    //   .then(data => this.setState(
+    //     { contactData: data, loading: false },
+    //   ))
+    this.loadContactData();
+  }
+
+  render() {
+    return (
+      <Container fluid>
+        <Row>
+          <Col>
+            <h1 className="text-center">Contact Application</h1>
+          </Col>
+        </Row>
+        <hr />
+        <Row>
+          <Col sm={8}>
+            <h2>My Contacts</h2>
+            <ContactTable
+              contacts={this.state.contactData}
+              handleEdit={this.handleEditModalOpen}
+            />
+          </Col>
+          <Col sm={4}>
+            <h2>Add New Contact</h2>
+            <ContactForm
+              handleSubmit={this.handleAddFormSubmit}
+              handleChange={this.handleAddFormChange}
+              contactData={this.state.newContactData}
+            />
+          </Col>
+        </Row>
+        <ContactModal
+          show={this.state.showEditModal}
+          handleClose={this.handleEditModalClose}
+          contactData={this.state.editContactData} />
+      </Container>
+    );
+  }
 }
 
 export default App;
